@@ -48,7 +48,16 @@ const show = (req, res) => {
     const id = Number(req.params.id);
 
     const sql = 'SELECT * FROM posts WHERE id = ?';
+
+    const sqlTags = `
+    SELECT tags.id, tags.label
+    FROM tags
+    JOIN post_tag ON post_tag.tag_id = tags.id
+    WHERE post_tag.post_id = ?
+  `;
+
     console.log(sql, id);
+
 
     connection.query(sql, [id], (err, response) => {
 
@@ -67,11 +76,27 @@ const show = (req, res) => {
         }
 
         const post = response[0];
-        console.log("Post trovato:", post);
-        return res.json(post);
+
+
+        connection.query(sqlTags, [id], (errTags, resTags) => {
+
+            if (errTags) {
+                return res.status(500).json({
+                    error: true,
+                    message: errTags.message,
+                });
+            }
+
+            console.log("Post:", post);
+            console.log("Tags:", resTags);
+
+
+            post.tags = resTags;
+
+            return res.json(post);
+        });
     });
 };
-
 function store(req, res) {
     console.log("Dati in arrivo:", req.body);
 
