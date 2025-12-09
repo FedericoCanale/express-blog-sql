@@ -32,7 +32,7 @@ function index(req, res) {
     });
 }
 
-function show(req, res) {
+/* OLD API CRUD function show(req, res) {
     const id = Number(req.params.id);
     const post = posts.find((p) => p.id === id);
 
@@ -41,8 +41,36 @@ function show(req, res) {
     } else {
         return res.json(post);
     }
-}
+}*/
 
+const show = (req, res) => {
+
+    const id = Number(req.params.id);
+
+    const sql = 'SELECT * FROM posts WHERE id = ?';
+    console.log(sql, id);
+
+    connection.query(sql, [id], (err, response) => {
+
+        if (err) {
+            return res.status(500).json({
+                error: true,
+                message: err.message,
+            });
+        }
+
+        if (response.length === 0) {
+            return res.status(404).json({
+                error: true,
+                message: "Post Not Found",
+            });
+        }
+
+        const post = response[0];
+        console.log("Post trovato:", post);
+        return res.json(post);
+    });
+};
 
 function store(req, res) {
     console.log("Dati in arrivo:", req.body);
