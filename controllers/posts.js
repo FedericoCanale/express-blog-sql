@@ -1,5 +1,6 @@
 
 const posts = require("../data/posts");
+const connection = require("../database/db");
 
 function index(req, res) {
     const tag = req.query.tag;
