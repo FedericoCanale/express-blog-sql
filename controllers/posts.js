@@ -16,7 +16,7 @@ const connection = require("../database/db");
 }*/
 
 /* GET data from databse with STATUS CODE*/
-function index(req, res, next) {
+function index(req, res) {
     const sql = "SELECT * FROM posts";
 
     connection.query(sql, (err, results) => {
@@ -104,7 +104,7 @@ function modify(req, res) {
 }
 
 
-function destroy(req, res) {
+/*OLD API CRUD function destroy(req, res) {
     const id = Number(req.params.id);
     const index = posts.findIndex(p => p.id === id);
 
@@ -114,7 +114,27 @@ function destroy(req, res) {
     posts.splice(index, 1);
     console.log("Lista aggiornata dei post:", posts);
     return res.sendStatus(204);
-}
+}*/
+
+const destroy = (req, res) => {
+
+    const id = Number(req.params.id);
+
+    const sql = 'DELETE FROM posts WHERE id = ?';
+    console.log(sql, id);
+
+    connection.query(sql, [id], (err, results) => {
+
+        if (err) {
+            return res.status(500).json({
+                error: true,
+                message: err.message
+            });
+        }
+        console.log(results);
+        return res.sendStatus(204);
+    });
+};
 
 /* function index(req, res, next) {
     next(new Error("Errore di test!"));

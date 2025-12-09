@@ -2,14 +2,15 @@ const express = require("express");
 
 const app = express();
 const PORT = 3000;
+const postsRouter = require("./routers/posts");
+const notFound = require("./middlewares/notFound");
+const errorsHandler = require("./middlewares/errorsHandler");
 
 // middlewares
 app.use(express.static("public"));
 app.use(express.json());
 
 // routers
-const postsRouter = require("./routers/posts");
-
 // rotte
 app.get("/", (req, res) => {
     res.send("Homepage del blog");
@@ -18,11 +19,9 @@ app.get("/", (req, res) => {
 app.use("/posts", postsRouter);
 
 // middlewares per rotte non trovate
-const notFound = require("./middlewares/notFound");
 app.use(notFound);
 
 // middleware di gestione errori
-const errorsHandler = require("./middlewares/errorsHandler");
 app.use(errorsHandler);
 
 app.listen(PORT, () => {
