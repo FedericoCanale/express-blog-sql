@@ -1,6 +1,7 @@
 const express = require("express");
 
 const app = express();
+const cors = require("cors");
 const PORT = 3000;
 const postsRouter = require("./routers/posts");
 const notFound = require("./middlewares/notFound");
@@ -9,6 +10,9 @@ const errorsHandler = require("./middlewares/errorsHandler");
 // middlewares
 app.use(express.static("public"));
 app.use(express.json());
+app.use(cors({
+    origin: `http://localhost:5173`
+}));
 
 // routers
 // rotte
